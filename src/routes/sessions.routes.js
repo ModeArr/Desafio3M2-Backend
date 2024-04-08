@@ -1,8 +1,9 @@
 const { Router } = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const config = require("../config/config")
 
-const secret = "JWTSECRET"
+const secret = config.JWT_SECRET
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.post("/login", passport.authenticate('login', {
   res.cookie("jwt", token, {
     httpOnly: true,
     secure: false,
+    signed: true,
     maxAge: 1000 * 60 * 30 // 30 min
   })
 
@@ -35,6 +37,7 @@ router.post("/register", passport.authenticate('register', {
   successRedirect: '/',
   failureRedirect: '/login',
   failureFlash: true,
+  session: false,
 }));
 
 router.get(
@@ -47,8 +50,20 @@ router.get(
   "/github/callback",
   passport.authenticate("github", { 
     failureRedirect: "/login",
-    successRedirect: '/',
-})
+    session: false,
+}), function(req, res) {
+  const token = jwt.sign(JSON.stringify(req.user), secret)
+  console.log(req.user)
+
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    secure: false,
+    signed: true,
+    maxAge: 1000 * 60 * 60 * 1 // 1 hora
+  })
+
+  res.redirect('/');
+}
 );
 
 router.get("/current", passport.authenticate("jwt", { session: false }),
@@ -58,7 +73,7 @@ router.get("/current", passport.authenticate("jwt", { session: false }),
   }
     
   return res.status(200).send({ status: "ok",
-              cookieJWT: req.cookies['jwt'],
+              cookieJWT: req.signedCookies['jwt'],
               JWTPayload: req.user
     })
 }

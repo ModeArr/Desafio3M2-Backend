@@ -5,12 +5,13 @@ const DBUserManager = require("../dao/DBUserManager");
 const userModel = require("../dao/models/user.models");
 const userManager = new DBUserManager()
 const jwt = require("passport-jwt");
+const config = require("./config")
 
 const JWTStrategy = jwt.Strategy;
-const secret = "JWTSECRET"
+const secret = config.JWT_SECRET
 
-const GITHUB_CLIENT_ID = "04b186f6bf114610bee3"; 
-const GITHUB_CLIENT_SECRET = "e47a226def5d0dc2592c0ca4c9b0a3df8e681418";
+const GITHUB_CLIENT_ID = config.GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = config.GITHUB_CLIENT_SECRET
 
 const localStrategy = local.Strategy;
 
@@ -76,15 +77,18 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
+          console.log(profile._json)
           let user = await userManager.checkUser(profile._json?.email);
           if (!user) {
             let addNewUser = {
               first_name: profile._json.name,
               last_name: "No LastName", //areglar esto
               email: profile._json?.email,
+              age: 18,
               password: "GenerarPassHasheadaRandom", //y esto
             };
-            let newUser = await userManager.addUser(addNewUser.first_name, addNewUser.last_name, addNewUser.email, addNewUser.password);
+            console.log(addNewUser)
+            let newUser = await userManager.addUser(addNewUser.first_name, addNewUser.last_name, addNewUser.email, addNewUser.age, addNewUser.password);
             done(null, newUser);
           } else {
             done(null, user);
@@ -100,7 +104,7 @@ const initializePassport = () => {
     let token = null 
 
     if (req && req.cookies) {
-        token = req.cookies['jwt']
+        token = req.signedCookies['jwt']
     }
 
     return token

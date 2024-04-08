@@ -7,25 +7,26 @@ const viewRoutes = require("./routes/views.routes")
 const messagesRoutes = require("./routes/messages.routes")
 const sessionRoutes = require("./routes/sessions.routes")
 const mongoose = require('mongoose')
-const mongoStore = require("connect-mongo")
 const cookieParser = require("cookie-parser")
-const session = require("express-session")
 const initializePassport = require("./config/passport.config")
 const passport = require("passport")
+const config = require("./config/config")
 
-PORT = 8080
-API_PREFIX = "api"
-MONGO_URL = "mongodb+srv://Coder:u9TPQxlvOLPXpuKA@coder-backend.qtumzqc.mongodb.net/?retryWrites=true&w=majority"
+const PORT = config.PORT
+const API_PREFIX = config.API_PREFIX
+const MONGO_URL = config.MONGO_URL
+const DB_NAME = config.DB_NAME
+const cookieSecret = config.COOKIE_SECRET 
 
 const app = express()
 
 app.use(express.urlencoded({ extends: true }));
 app.use(express.json()); 
 app.use(express.static(__dirname + '/public'))
-app.use(cookieParser());
+app.use(cookieParser(cookieSecret));
 
 mongoose.connect(MONGO_URL, {
-    dbName: 'ecommerce',
+    dbName: DB_NAME,
   })
     .then((conn) => {
         console.log("CONNECTED TO MONGODB")

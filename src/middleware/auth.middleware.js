@@ -1,7 +1,7 @@
 const passport = require("passport");
 
 function authMdw(req, res, next) {/// TODO implementar roles, cambiar modelo
-    if (!req.cookies['jwt']) {
+    if (!req.signedCookies['jwt']) {
       return res.redirect("/login")
     }
 
@@ -20,7 +20,7 @@ function authMdw(req, res, next) {/// TODO implementar roles, cambiar modelo
 }
 
   function loggedRedirect(req, res, next) {
-    if (req.cookies['jwt']) {
+    if (req.signedCookies['jwt']) {
       return res.redirect("/")
     }
   
