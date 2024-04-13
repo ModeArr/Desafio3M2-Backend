@@ -1,4 +1,4 @@
-const userModel = require('./models/user.models')
+const userModel = require('../models/user.models')
 const { isValidPasswd, createHash } = require("../utils/encrypt");
 const DBCartManager = require("../dao/DBCartManager");
 const cart = new DBCartManager()

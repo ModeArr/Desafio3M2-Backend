@@ -8,12 +8,12 @@ const DBMessagesManager = require("../dao/DBMessagesManager");
 const messages = new DBMessagesManager()
 const DBCartManager = require("../dao/DBCartManager");
 const cart = new DBCartManager()
-const { authMdw, loggedRedirect } = require("../middleware/auth.middleware");
+const { authMdwFront, loggedRedirect } = require("../middleware/auth.middleware");
 
 
 const router = Router()
 
-router.get('/', authMdw, (req, res) => {
+router.get('/', authMdwFront, (req, res) => {
     const { page = 1, limit = 5, sort } = req.query;
 
     let query = {}
@@ -45,7 +45,7 @@ router.get('/', authMdw, (req, res) => {
     });
 })
 
-router.get('/realtimeproducts', authMdw, (req, res) => {
+router.get('/realtimeproducts', authMdwFront, (req, res) => {
     const { page = 1, limit = 5, sort } = req.query;
 
     let query = {}
@@ -89,7 +89,7 @@ router.get('/chat', (req, res) => {
     });
 })
 
-router.get('/products', authMdw, (req, res) => {
+router.get('/products', authMdwFront, (req, res) => {
     const { page = 1, limit = 5, sort } = req.query;
 
     let query = {}
@@ -121,7 +121,7 @@ router.get('/products', authMdw, (req, res) => {
     });
 })
 
-router.get('/carts/:cid', authMdw, (req, res) => {
+router.get('/carts/:cid', authMdwFront, (req, res) => {
     const idCart = req.params.cid
 
     cart.getCartProducts(idCart).then(result => {

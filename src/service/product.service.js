@@ -1,7 +1,7 @@
 const productsModel = require('../models/products.model')
 const url = require('url');
 
-class DBProductManager {
+class ProductService {
 
     async getProducts(page, limit, sort, query, url) {
         try {
@@ -205,4 +205,4 @@ class DBProductManager {
 
 }
 
-module.exports = DBProductManager
+module.exports = ProductService
