@@ -1,9 +1,8 @@
 const passport = require("passport");
 const local = require("passport-local");
 const GithubStrategy = require("passport-github2");
-const DBUserManager = require("../dao/DBUserManager");
-const userModel = require("../models/user.models");
-const userManager = new DBUserManager()
+const UserManagerService = require("../service/user.service")
+const userManager = new UserManagerService()
 const jwt = require("passport-jwt");
 const config = require("./config")
 
