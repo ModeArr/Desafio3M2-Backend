@@ -10,7 +10,7 @@ const {
 
 const router = Router()
 
-router.get("/", authMdwFront, getProductsCtrl)
+router.get("/", authMdw(['USER']), getProductsCtrl)
 
 router.get("/:pid", getProductsByIdCtrl)
 

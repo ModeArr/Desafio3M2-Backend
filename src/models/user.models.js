@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const collection = "users";
 
+const roleType = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+  PUBLIC: 'PUBLIC',
+}
+
 const userSchema = new mongoose.Schema({
   first_name: String,
   last_name: String,
@@ -19,6 +25,7 @@ const userSchema = new mongoose.Schema({
   },
   role: { 
     type: String,
+    enum: Object.values(roleType),
     default: 'USER'
   },
 });

@@ -1,23 +1,27 @@
 const passport = require("passport");
 
-function authMdw(req, res, next) {
-  if (!req.signedCookies['jwt']) {
-    return res
-      .status(401)
-      .send({ message: "Acceso denegado. Token inválido o expirado." });
+function authMdw(role) {
+  return (req, res, next) => {
+
+  if (role.length === 1 && role[0] === "PUBLIC") {
+    return next();
   }
 
   passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
     if (err) {
       return next(err)
     }
+    console.log(userJWT)
+    
     if (!userJWT) {
       return res
         .status(401)
         .send({ message: "Acceso denegado. Token inválido o expirado." });
     }
 
-    if (role !== userJWT.role){
+    
+    const currentRole = userJWT.role
+    if (!role.includes(currentRole)){
       return res
         .status(401)
         .send({ message: "Acceso prohibido." });
@@ -25,7 +29,7 @@ function authMdw(req, res, next) {
       req.user = userJWT
       return next()
   })(req, res, next)
-}
+}}
 
 function authMdwFront(req, res, next) {
     if (!req.signedCookies['jwt']) {
