@@ -1,9 +1,5 @@
 const { Router } = require("express")
-const path = require("path");
-const pathDB = path.join(`${__dirname}/../dao/cart.json`)
-const CartManager = require("../dao/CartManager");
-const DBCartManager = require("../dao/DBCartManager")
-const cart = new DBCartManager()
+const { authMdw } = require("../middleware/auth.middleware")
 const {
     addCartCtrl,
     getCartProductsCtrl,
@@ -15,16 +11,16 @@ const {
 
 const router = Router()
 
-router.post("/", addCartCtrl)
+router.post("/", authMdw(['PUBLIC']), addCartCtrl)
 
-router.get("/:cid", getCartProductsCtrl)
+router.get("/:cid", authMdw(['PUBLIC']), getCartProductsCtrl)
 
-router.post("/:cid/product/:pid", addProductToCartCtrl)
+router.post("/:cid/product/:pid", authMdw(['USER', 'ADMIN']), addProductToCartCtrl)
 
-router.delete("/:cid/product/:pid", deleteProductCartCtrl)
+router.delete("/:cid/product/:pid", authMdw(['USER', 'ADMIN']), deleteProductCartCtrl)
 
-router.put("/:cid/product/:pid", editProductQuantityCtrl)
+router.put("/:cid/product/:pid", authMdw(['USER', 'ADMIN']), editProductQuantityCtrl)
 
-router.delete("/:cid", deleteAllCartProductsCtrl)
+router.delete("/:cid", authMdw(['USER', 'ADMIN']), deleteAllCartProductsCtrl)
 
 module.exports = router

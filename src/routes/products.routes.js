@@ -10,14 +10,14 @@ const {
 
 const router = Router()
 
-router.get("/", authMdw(['USER']), getProductsCtrl)
+router.get("/", authMdw(['PUBLIC']), getProductsCtrl)
 
-router.get("/:pid", getProductsByIdCtrl)
+router.get("/:pid", authMdw(['PUBLIC']), getProductsByIdCtrl)
 
-router.post("/", addProductCtrl)
+router.post("/", authMdw(['ADMIN']), addProductCtrl)
 
-router.put("/:pid", updateProductCtrl)
+router.put("/:pid", authMdw(['ADMIN']), updateProductCtrl)
 
-router.delete("/:pid", deleteProductCtrl)
+router.delete("/:pid", authMdw(['ADMIN']), deleteProductCtrl)
 
 module.exports = router
